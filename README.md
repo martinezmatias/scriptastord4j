@@ -1,25 +1,41 @@
-# Defects4j-Repair
+# Dj4 Astor Runner:
 
-This repository contains the raw experimental results of an experiment done at INRIA Lille on the automatic repair of the bugs of the Defects4J dataset.
+It's an old folk from [defects4j-repair-runner](https://github.com/tdurieux/defects4j-repair-runner) by [Thomas Durieux](https://github.com/tdurieux) and adapted for running a new version Astor framework by [Matias Martinez](https://github.com/martinezmatias).
 
-Latest results: 47 bugs repaired, see https://github.com/Spirals-Team/defects4j-repair/tree/master/results/2015-august
+## How to use it?
 
-See 
-[Automatic Repair of Real Bugs: An Experience Report on the Defects4J Dataset](http://arxiv.org/pdf/1505.07002) (Thomas Durieux, Matias Martinez, Martin Monperrus, Romain Sommerard, Jifeng Xuan), Technical report 1505.07002, Arxiv, 2015.
+First, edit file [Config.py](https://github.com/martinezmatias/scriptastord4j/blob/master/src/python/core/Config.py) to specify the path to the JVM and the localion of the Defects4J projects.
+
+
+
+This runner is designed to run on a [OAR](http://oar.imag.fr/dokuwiki/doku.php) system.
+
+The program ```defects4j-g5k.py``` is used to start the execution on the cluster.
+### ```defects4j-g5k.py``` Usage
+```bash
+usage: defects4j-g5k.py [-h] -projects PROJECTS [PROJECTS ...] -tools TOOLS
+                        [TOOLS ...] [-id ID [ID ...]] [--timeout TIMEOUT]
+                        [--with-angelic]
+
+Run tools on defect4j with grid5000
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -projects PROJECTS [PROJECTS ...]
+                        Which project (all, math, lang, time, chart)
+  -modes MODES [MODES ...]
+                        Which mode (jgenprog, jkalo)
+  -id ID [ID ...]       Bug id
+  --timeout TIMEOUT     Node timeout
+  --scope SCOPE      Ingredient scope
+  --seed SEED     Random seed
+  --parameters     parameters to pass to Astor (format key1:value1:key2:value2:keyn:valuen, where keyi is the name of the parameter (eg., maxGeneration) and valuei is the value (e.g, 100)) 
+```
+
+## Example Math-70
 
 ```
-@techreport{durieux2015,
-  author = {Thomas Durieux and Matias Martinez and Martin Monperrus and Romain Sommerard and Jifeng Xuan},
-  title = {{Automatic Repair of Real Bugs: An Experience Report on the Defects4J Dataset}},
-  institution = {Arxiv},
-  number = {1505.07002},
-  year = 2015,
-  url = {http://arxiv.org/pdf/1505.07002},
-}
+cd src/python/
+python defects4j-g5k.py --timeout 04:30:00 -modes jgenprog  -project Math  -i 70   -seed 0  -scope package -parameters stopfirst:true:maxGeneration:100
 ```
-Uses:
 
-* https://github.com/SpoonLabs/nopol
-* https://github.com/SpoonLabs/astor
-
-# scriptastord4j
