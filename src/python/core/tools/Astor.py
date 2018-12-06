@@ -37,27 +37,25 @@ class Astor(Tool):
 
 		#New Astor: 
 		classpath = ""
-        	for index, cp in project.classpath.iteritems():
-            		if id <= int(index):
-                		for c in cp.split(":"):
-                		    if classpath != "":
-                        		classpath += ":"    
-              	     		    classpath += os.path.join(workdir, c) 
-                		break
+		for index, cp in project.classpath.iteritems():
+			if id <= int(index):
+				for c in cp.split(":"):
+					if classpath != "":
+						classpath += ":"
+						classpath += os.path.join(workdir, c)
+				break
 		##
 		for lib in project.libs:
-            		if os.path.exists(os.path.join(workdir, "lib", lib)):
-                		classpath += ":" + os.path.join(workdir, "lib", lib)
-        	classpath += ":" + self.jar
+			if os.path.exists(os.path.join(workdir, "lib", lib)):
+				classpath += ":" + os.path.join(workdir, "lib", lib)
+		classpath += ":" + self.jar
 		##end new
 		# extracts failing test cases
 		failingTest = ""
 		reg = re.compile('- (.*)::(.*)')
 		m = reg.findall(info)
 		for i in m:
-			failingTest += i[0] + ":"    
-	#	maxtimesp = self.maxExecution.split(":")
-	#	maxtimeminutes = int(maxtimesp[0]) * 100
+			failingTest += i[0] + ":"
 
 		cmd = 'cd ' + workdir +  ';'
 		cmd += 'export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8;'
@@ -173,14 +171,14 @@ class Astor(Tool):
 				scopepatch = None
 				ingrpatch = None
 				fvaltcfailing = None
- 		           	fvalresult = None
-               			fvaltcall = None
-               			mvaltcfailing = None
-            			mvalresult = None
-                		mvaltcall = None
-                		evaltcfailing = None
-                		evalresult = None
-                		evaltcall = None
+				fvalresult = None
+				fvaltcall = None
+				mvaltcfailing = None
+				mvalresult = None
+				mvaltcall = None
+				evaltcfailing = None
+				evalresult = None
+				evaltcall = None
 				m = re.search('^([0-9]+)$', op, flags=re.MULTILINE+re.DOTALL)
 				if m:
 					variant = m.group(1)
@@ -218,29 +216,28 @@ class Astor(Tool):
 					scopepatch = m.group(1)
 				m = re.search('ingredients= (.*)', op)
 				if m:
-				   ingrpatch = m.group(1)
-			        #new
-               			m = re.search('failing: (.*)', op)
-              			if m:
-                    			sl = m.group(1).split("|")
-                    			fvaltcfailing = sl[2]
-                   		 	fvalresult = sl[1]
-                    			fvaltcall = sl[3]
+					ingrpatch = m.group(1)
+					#new
+				m = re.search('failing: (.*)', op)
+				if m:
+					sl = m.group(1).split("|")
+					fvaltcfailing = sl[2]
+					fvalresult = sl[1]
+					fvaltcall = sl[3]
+
+				m = re.search('manual_regression: (.*)', op)
+				if m:
+					sl = m.group(1).split("|")
+					mvaltcfailing = sl[2]
+					mvalresult = sl[1]
+					mvaltcall = sl[3]
 				#
-				                #new
-                  		m = re.search('manual_regression: (.*)', op)
-                    		if m:
-                    			sl = m.group(1).split("|")
-                    			mvaltcfailing = sl[2]
-                    			mvalresult = sl[1]
-                    			mvaltcall = sl[3]
-                		#
-                		m = re.search('evo_regression: (.*)', op)
-                    		if m:
-                    			sl = m.group(1).split("|")
-                    			evaltcfailing = sl[2]
-                    			evalresult = sl[1]
-                  			evaltcall = sl[3]
+				m = re.search('evo_regression: (.*)', op)
+				if m:
+					sl = m.group(1).split("|")
+					evaltcfailing = sl[2]
+					evalresult = sl[1]
+					evaltcall = sl[3]
 				#
 				if(patch == None):
 					continue
@@ -261,16 +258,14 @@ class Astor(Tool):
 					'ingredients': ingrpatch,
 					'patchvalidation': {
 						'fvaltcfailing': fvaltcfailing,
-                    				'fvalresult': fvalresult,
-                    				'fvaltcall': fvaltcall,
-					 	#
-                                		'mvaltcfailing': mvaltcfailing,
-                                  		'mvalresult': mvalresult,
-                                  		'mvaltcall': mvaltcall,
-                                  		#
-                                  		'evaltcfailing': evaltcfailing,
-                                  		'evalresult': evalresult,
-                                  		'evaltcall': evaltcall
+									'fvalresult': fvalresult,
+									'fvaltcall': fvaltcall,
+									'mvaltcfailing': mvaltcfailing,
+									'mvalresult': mvalresult,
+									'mvaltcall': mvaltcall,
+									'evaltcfailing': evaltcfailing,
+									'evalresult': evalresult,
+									'evaltcall': evaltcall
 					},
 				})
 
