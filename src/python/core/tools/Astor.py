@@ -35,6 +35,8 @@ class Astor(Tool):
 		info = subprocess.check_output(cmdInfo, shell=True)
 		workdir = self.initTask(project, id)	
 
+		print "jvms 8 %s" %conf.javaHome8
+
 		#New Astor: 
 		classpath = ""
 		for index, cp in project.classpath.iteritems():
@@ -105,7 +107,7 @@ class Astor(Tool):
 
 		logPath = os.path.join(project.logPath, "seed",seed, scope ,str(id), self.name, "stdout.log.full")
 		logFile = file(logPath, 'w')
-		print cmd
+		print "Running command %s" % cmd
 		subprocess.call(cmd, shell=True, stdout=logFile)
 		with open(logPath) as data_file:
 			log = data_file.read()

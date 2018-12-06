@@ -6,14 +6,18 @@ import time
 import json
 import datetime
 import subprocess
+import traceback
+from  core.tools.Astor import *
 
 class NodeHandler(object):
 	"""docstring for NodeHandler"""
-	def __init__(self, tasks):
+	def __init__(self, tasks, runlocal = False):
 		self.maxNode = 50
 		self.tasks = tasks
 		self.running = 0
 		self.init = False
+		self.runlocal= runlocal
+
 	def run(self, timeoutNode=None):
 		totalTask = len(self.tasks)
 		self.toExecuteTask = []
@@ -42,7 +46,7 @@ class NodeHandler(object):
 				cmd += 'rm %s; ' % stderrlog
 				cmd += 'rm %s; ' % resultlog
 
-				nodeCmdArgs = "%s -project %s -t %s -i %d -scope %s -seed %s -mode %s -parameters %s" % (
+				nodeCmdArgs = "%s -project %s -t %s -i %d -scope %s -seed %s -mode %s -parameters %s -jvmtest %s -jvmapproach %s" % (
 					os.path.join(os.path.dirname(__file__), '..', 'defects4j-g5k-node.py'),
 					task.project.name,
 					task.tool.name,
@@ -50,7 +54,9 @@ class NodeHandler(object):
 					task.scope,
 					task.seed,
 					task.mode, 
-					task.parameters
+					task.parameters,
+					task.jvmtest,
+					task.jvmapproach
 				)
 				nodeCmd = "python %s" % nodeCmdArgs 
 
@@ -62,7 +68,23 @@ class NodeHandler(object):
 					nodeCmd
 				)
 				devnull = open('/dev/null', 'w')
-				cmdOutput = subprocess.check_output(cmd, shell=True, stdin=None, stderr=devnull)
+
+				try:
+					if not self.runlocal:
+						cmdOutput = subprocess.check_output(cmd, shell=True, stdin=None, stderr=devnull)
+					else:
+						cmdOutput = subprocess.check_output(nodeCmdArgs, shell=True, stdin=None, stderr=devnull)
+						print "output %s" %cmdOutput
+						#tool = Astor()
+						#tool.run(task.project.name, task.id, task.scope, task.seed, task.mode, task.parameters)
+						#cmdOutput = ''
+				except Exception as e:
+					print("Error launching process")
+					print(e)
+					exc_type, exc_value, exc_traceback = sys.exc_info()
+					traceback.print_tb(exc_traceback)
+					cmdOutput = ''
+
 				m = re.search('OAR_JOB_ID=([0-9]+)', cmdOutput)
 				if m:
 					jobId = int(m.group(1))
@@ -122,7 +144,7 @@ class NodeHandler(object):
 					task = bug[tool]
 					if task in self.toExecuteTask:
 						output += " {0:8} |".format("Queue")
-					elif str(self.taskOARId[task]) in states:
+					elif (not self.runlocal) and (str(self.taskOARId[task]) in states):
 						state = states[str(self.taskOARId[task])]
 						if state['state'] == "Running":
 							output += " {0:8} |".format(datetime.timedelta(seconds=int(time.time() - float(state['startTime']))))

@@ -3,6 +3,11 @@
 ## Getting started
 This runner is designed to run on a [OAR](http://oar.imag.fr/dokuwiki/doku.php) system.
 
+Before starting please set two properties at file [Config](core/Config.py):
+`defects4jRoot` which points to Defects4J root folder,
+and
+`projectsRoot` which points to a folder with all the extracted issues from D4J (the extructure of the folder is "projectname/projectname_bugid", e.g., "math/math_10")
+
 The program ```defects4j-g5k.py``` is used to start the execution on the cluster.
 ### ```defects4j-g5k.py``` Usage
 ```bash
