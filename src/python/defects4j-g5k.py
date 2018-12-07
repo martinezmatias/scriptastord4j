@@ -84,9 +84,9 @@ if args.jvmtest is not None:
 	print "Setting jvm %s " % (conf.javaHome)
 	jvmtest=args.jvmtest
 
-if args.jvmapproach is not None:
+if args.jvmapproach is not None and not(args.jvmapproach == 'None'):
 	conf.javaHome8=args.jvmapproach
-	print "Setting jvm  8%s " % (conf.javaHome8)
+	print "Setting jvm 8 %s " % (conf.javaHome8)
 	jvmapproach=args.jvmapproach
 
 print "Configuration %s and %s" % (conf.javaHome, conf.javaHome8)

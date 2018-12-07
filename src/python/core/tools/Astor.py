@@ -159,12 +159,12 @@ class Astor(Tool):
 		operations = []
 
 		operationsSplit = log.split('ProgramVariant ')
-		if(len(operationsSplit) > 1):
+		if (len(operationsSplit) > 1):
 			for op in operationsSplit:
 				generation = None
 				className = None
 				line = None
-				lineSusp = None	
+				lineSusp = None
 				patch = None
 				buggyStatement = None
 				type = None
@@ -172,19 +172,23 @@ class Astor(Tool):
 				timepatch = 0
 				scopepatch = None
 				ingrpatch = None
+				#
 				fvaltcfailing = None
 				fvalresult = None
 				fvaltcall = None
+				#
+				#
 				mvaltcfailing = None
 				mvalresult = None
 				mvaltcall = None
+				#
 				evaltcfailing = None
 				evalresult = None
 				evaltcall = None
-				m = re.search('^([0-9]+)$', op, flags=re.MULTILINE+re.DOTALL)
+				m = re.search('^([0-9]+)$', op, flags=re.MULTILINE + re.DOTALL)
 				if m:
 					variant = m.group(1)
-				#m = re.search('(REPLACE|DELETE|INSERT_BEFORE|INSERT_AFTER)', op)
+				# m = re.search('(REPLACE|DELETE|INSERT_BEFORE|INSERT_AFTER)', op)
 				m = re.search('operation: (.*)', op)
 				if m:
 					type = m.group(1)
@@ -199,10 +203,10 @@ class Astor(Tool):
 				m = re.search('lineSuspiciousness= ([0-9]+)', op)
 				if m:
 					lineSusp = m.group(1)
-				m = re.search('^original statement= "?(.*)"?\nfixed statement', op, flags=re.MULTILINE+re.DOTALL)
+				m = re.search('^original statement= "?(.*)"?\nbuggy kind', op, flags=re.MULTILINE + re.DOTALL)
 				if m:
 					buggyStatement = m.group(1)
-				m = re.search('^fixed statement= "?(.*)"?\ngeneration', op, flags=re.MULTILINE+re.DOTALL)
+				m = re.search('^fixed statement= "?(.*)"?\nPatch kind', op, flags=re.MULTILINE + re.DOTALL)
 				if m:
 					patch = m.group(1)
 				if type == "RemoveOp":
@@ -219,14 +223,15 @@ class Astor(Tool):
 				m = re.search('ingredients= (.*)', op)
 				if m:
 					ingrpatch = m.group(1)
-					#new
+				# new
 				m = re.search('failing: (.*)', op)
 				if m:
 					sl = m.group(1).split("|")
 					fvaltcfailing = sl[2]
 					fvalresult = sl[1]
 					fvaltcall = sl[3]
-
+				#
+				# new
 				m = re.search('manual_regression: (.*)', op)
 				if m:
 					sl = m.group(1).split("|")
@@ -241,8 +246,9 @@ class Astor(Tool):
 					evalresult = sl[1]
 					evaltcall = sl[3]
 				#
-				if(patch == None):
-					continue
+				# if(patch == None):
+				#	continue
+
 				operations.append({
 					'type': type,
 					'generation': int(generation),
@@ -260,17 +266,18 @@ class Astor(Tool):
 					'ingredients': ingrpatch,
 					'patchvalidation': {
 						'fvaltcfailing': fvaltcfailing,
-									'fvalresult': fvalresult,
-									'fvaltcall': fvaltcall,
-									'mvaltcfailing': mvaltcfailing,
-									'mvalresult': mvalresult,
-									'mvaltcall': mvaltcall,
-									'evaltcfailing': evaltcfailing,
-									'evalresult': evalresult,
-									'evaltcall': evaltcall
+						'fvalresult': fvalresult,
+						'fvaltcall': fvaltcall,
+						#
+						'mvaltcfailing': mvaltcfailing,
+						'mvalresult': mvalresult,
+						'mvaltcall': mvaltcall,
+						#
+						'evaltcfailing': evaltcfailing,
+						'evalresult': evalresult,
+						'evaltcall': evaltcall
 					},
 				})
-
 		results = {
 			'programVariant': programVariant,
 			'operations': operations,
