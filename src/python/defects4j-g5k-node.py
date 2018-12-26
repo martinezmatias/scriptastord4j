@@ -67,5 +67,5 @@ if args.jvmapproach is not None and not(args.jvmapproach == 'None'):
 
 print "Configuration %s and %s" % (conf.javaHome, conf.javaHome8)
 
-tool = Astor()
+tool = Astor(mode,scope, seed)
 tool.run(project, id,scope,seed,mode,parameters)
