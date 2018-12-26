@@ -44,13 +44,15 @@ class Astor(Tool):
 				for c in cp.split(":"):
 					if classpath != "":
 						classpath += ":"
-						classpath += os.path.join(workdir, c)
+					classpath += os.path.join(workdir, c)
 				break
 		##
 		for lib in project.libs:
 			if os.path.exists(os.path.join(workdir, "lib", lib)):
 				classpath += ":" + os.path.join(workdir, "lib", lib)
 		classpath += ":" + self.jar
+
+		print "\n classpath of project %s\n"%classpath
 		##end new
 		# extracts failing test cases
 		failingTest = ""
